@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A standalone IELTS Academic Band 7+ vocabulary, speaking, reading, and spaced-repetition study app.">
+  <meta name="theme-color" content="#2f6f5e">
+  <meta property="og:title" content="IELTS Academic 7+ Vocabulary Studio">
+  <meta property="og:description" content="Practise IELTS Academic vocabulary in context with speaking prompts, reading passages, and local spaced repetition.">
+  <meta property="og:type" content="website">
+  <title>IELTS Academic 7+ Vocabulary Studio</title>
+  <style>
+    :root {
+      --ink: #17211f;
+      --muted: #5d6966;
+      --line: #d9e0dd;
+      --paper: #fbfcfb;
+      --panel: #ffffff;
+      --green: #2f6f5e;
+      --teal: #0f7b82;
+      --gold: #b07514;
+      --red: #b4473a;
+      --blue: #315c91;
+      --wash: #eef5f2;
+      --mark: #fff2b8;
+      --shadow: 0 12px 30px rgba(23, 33, 31, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      background: linear-gradient(135deg, #f7fbf9, #e8f1ee 58%, #f7f1e6);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 300px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+      gap: 28px;
+      align-items: end;
+      padding: 44px 0 28px;
+    }
+
+    h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
+    h1 { font-size: clamp(2.1rem, 5vw, 4.8rem); letter-spacing: 0; max-width: 880px; }
+    h2 { font-size: 1.65rem; }
+    h3 { font-size: 1.08rem; }
+    p { margin: 0; }
+
+    .lead {
+      margin-top: 16px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .hero-panel {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .74);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      min-height: 78px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.7rem;
+      line-height: 1;
+      color: var(--green);
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(251, 252, 251, .95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 9px 13px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: #9fb1ac; }
+    button.active, .primary {
+      color: white;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .secondary { background: var(--wash); }
+    .danger { color: white; background: var(--red); border-color: var(--red); }
+
+    main { padding: 28px 0 56px; }
+    section { display: none; }
+    section.active { display: block; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-head p { color: var(--muted); max-width: 760px; margin-top: 8px; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+    }
+
+    textarea { min-height: 116px; resize: vertical; }
+    .toolbar input { max-width: 320px; }
+    .toolbar select { max-width: 280px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(23, 33, 31, .04);
+    }
+
+    .word-card {
+      display: grid;
+      gap: 10px;
+      min-height: 258px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 9px;
+      color: var(--muted);
+      background: #f8faf9;
+      font-size: .78rem;
+    }
+
+    .word-title {
+      font-size: 1.25rem;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .collocations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      border: 1px solid #cdd8d4;
+      background: var(--wash);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: .8rem;
+    }
+
+    .topic-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .topic-button {
+      text-align: left;
+      min-height: 82px;
+    }
+
+    .topic-button strong { display: block; }
+    .topic-button span { color: var(--muted); font-size: .88rem; }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .prompt {
+      border-left: 4px solid var(--teal);
+      padding: 12px 14px;
+      background: #f3f8f8;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .timer {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin: 8px 0;
+    }
+
+    .exercise-card, .reading-card {
+      margin-bottom: 16px;
+    }
+
+    .option-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .choice-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .choice-list label {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #f8faf9;
+    }
+
+    .choice-list input {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .question-text {
+      font-weight: 600;
+    }
+
+    .exercise-group-title {
+      margin: 20px 0 10px;
+      color: var(--green);
+    }
+
+    .revealed .correct-choice {
+      background: var(--mark);
+      border-color: var(--gold);
+      font-weight: 700;
+    }
+
+    .exercise-body {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .exercise-row {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .answer {
+      display: inline-block;
+      min-width: 92px;
+      color: transparent;
+      user-select: none;
+      border-bottom: 2px solid #aebbb7;
+      padding: 0 2px;
+    }
+
+    .revealed .answer {
+      color: var(--ink);
+      background: var(--mark);
+      border-bottom-color: var(--gold);
+      font-weight: 700;
+      user-select: text;
+    }
+
+    .review-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .review-word {
+      min-height: 300px;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+      text-align: center;
+    }
+
+    .review-word .word-title { font-size: 2rem; }
+    .review-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .progress-bar {
+      height: 11px;
+      background: #e3e9e6;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+    }
+
+    .passage {
+      column-width: 430px;
+      column-gap: 30px;
+      margin: 14px 0 18px;
+      color: #26302e;
+    }
+
+    .passage p { margin: 0 0 12px; }
+    .question-group {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .small {
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed #b9c6c2;
+      border-radius: 8px;
+      background: #f8faf9;
+    }
+
+    @media (max-width: 760px) {
+      .hero, .split, .review-layout { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .review-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .passage { column-width: auto; }
+    }
+
+    @media print {
+      nav, .toolbar, button, .hero-panel, .review-layout, #progress { display: none !important; }
+      body { background: white; }
+      section { display: block !important; page-break-after: always; }
+      .card { box-shadow: none; break-inside: avoid; }
+      .answer { color: var(--ink); background: var(--mark); border-bottom: 2px solid var(--gold); font-weight: 700; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <span class="tag">IELTS Academic Band 7+</span>
+        <h1>Speaking and vocabulary practice for precise academic English.</h1>
+        <p class="lead">Eight topic banks, original exam-style reading, self-check exercises, and local spaced repetition in one deployment-ready HTML file.</p>
+      </div>
+      <aside class="hero-panel">
+        <h2>Study Snapshot</h2>
+        <p class="small">Progress is stored only in this browser.</p>
+        <div class="stat-grid">
+          <div class="stat"><strong id="statWords">0</strong><span>single-word targets</span></div>
+          <div class="stat"><strong id="statTopics">0</strong><span>topic banks</span></div>
+          <div class="stat"><strong id="statDue">0</strong><span>due for review</span></div>
+          <div class="stat"><strong id="statMastered">0</strong><span>mastered words</span></div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <nav>
+    <div class="wrap tabs" id="tabs"></div>
+  </nav>
+
+  <main class="wrap">
+    <section id="vocabulary" class="active">
+      <div class="section-head">
+        <div>
+          <h2>Vocabulary</h2>
+          <p>Search, filter, and send high-value words into the review queue.</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <select id="vocabTopic"></select>
+        <input id="vocabSearch" type="search" placeholder="Search word, Turkish meaning, collocation...">
+      </div>
+      <div id="vocabGrid" class="grid"></div>
+    </section>
+
+    <section id="speaking">
+      <div class="section-head">
+        <div>
+          <h2>Speaking</h2>
+          <p>Part 1 questions and vocabulary-driven prompts for longer, more lexical answers.</p>
+        </div>
+      </div>
+      <div id="speakingTopics" class="topic-list"></div>
+      <div class="split">
+        <div class="card">
+          <h3 id="speakingTitle">Topic</h3>
+          <p class="small">Part 1 questions</p>
+          <div id="partOneQuestions" class="prompt-list" style="margin-top:12px"></div>
+        </div>
+        <div class="card">
+          <h3>Timed Answer Builder</h3>
+          <div class="timer" id="timer">00:45</div>
+          <div class="toolbar">
+            <button id="startTimer" class="primary">Start</button>
+            <button id="resetTimer">Reset</button>
+          </div>
+          <div id="speakingPrompt" class="prompt"></div>
+          <textarea id="speakingNotes" placeholder="Plan a Band 7+ answer using the target vocabulary..."></textarea>
+          <p class="small" id="targetWords"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="exercises">
+      <div class="section-head">
+        <div>
+          <h2>Exercises</h2>
+          <p>Finish an exercise to reveal underlined answers for self-checking. No scoring, no answer key panel.</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <select id="exerciseTopic"></select>
+        <button id="newExercises" class="primary">Shuffle Options</button>
+      </div>
+      <div id="exerciseDeck"></div>
+    </section>
+
+    <section id="review">
+      <div class="section-head">
+        <div>
+          <h2>Spaced Repetition</h2>
+          <p>Review due words with a simple local Leitner-style schedule.</p>
+        </div>
+      </div>
+      <div class="review-layout">
+        <div id="reviewCard" class="card review-word"></div>
+        <aside class="card">
+          <h3>Review Queue</h3>
+          <p class="small" id="reviewSummary"></p>
+          <div class="toolbar" style="margin-top:14px">
+            <button id="seedReview" class="secondary">Add Core Words</button>
+            <button id="clearProgress" class="danger">Reset Progress</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="reading">
+      <div class="section-head">
+        <div>
+          <h2>Reading</h2>
+          <p>Original Academic-style passages with two IELTS question types each.</p>
+        </div>
+      </div>
+      <div id="readingDeck"></div>
+    </section>
+
+    <section id="progress">
+      <div class="section-head">
+        <div>
+          <h2>Progress</h2>
+          <p>Local learning status by topic.</p>
+        </div>
+      </div>
+      <div id="progressDeck" class="grid"></div>
+    </section>
+  </main>
+
+  <script>
+    const topics = [
+      ["education", "Education & Research"],
+      ["technology", "Technology & Digital Society"],
+      ["environment", "Environment & Climate"],
+      ["health", "Health & Public Policy"],
+      ["economy", "Work, Economy & Globalisation"],
+      ["urban", "Urbanisation, Housing & Transport"],
+      ["culture", "Culture, Media & Communication"],
+      ["science", "Science, Energy & Innovation"]
+    ];
+
+    function rows(raw) {
+      return raw.trim().split("\n").map(line => line.split("|").map(part => part.trim()));
+    }
+
+    const V = {
+      education: rows(`
+attainment|başarı düzeyi|Attainment rises when students receive precise feedback.|achievement|educational attainment; raise attainment; attainment gap
+curriculum|müfredat|The curriculum should include research skills as well as factual knowledge.|programme of study|national curriculum; curriculum design; curriculum reform
+autonomy|özerklik|Autonomy helps learners continue studying after formal lessons end.|independence|learner autonomy; academic autonomy; promote autonomy
+inquiry|sorgulama|Inquiry encourages students to test claims instead of memorising them.|investigation|critical inquiry; inquiry-based learning; scholarly inquiry
+literacy|okuryazarlık|Literacy now includes the ability to evaluate digital sources.|competence|research literacy; digital literacy; improve literacy
+pedagogy|pedagoji|Pedagogy changes when teachers use discussion rather than lecture alone.|teaching practice|effective pedagogy; digital pedagogy; pedagogy strategy
+assessment|değerlendirme|Assessment should measure reasoning, not only short-term memory.|evaluation|formative assessment; assessment criteria; rigorous assessment
+rigour|titizlik|Rigour gives academic work credibility and depth.|strictness|academic rigour; intellectual rigour; maintain rigour
+evidence|kanıt|Evidence from several studies supports the new teaching method.|proof|empirical evidence; reliable evidence; evidence-based policy
+consensus|uzlaşı|Consensus among researchers can change when stronger data appears.|agreement|scholarly consensus; broad consensus; reach consensus
+retention|kalıcılık|Retention improves when new vocabulary is reviewed repeatedly.|long-term memory|knowledge retention; retention rate; improve retention
+competence|yeterlilik|Competence in academic writing takes time to develop.|ability|linguistic competence; professional competence; demonstrate competence
+scholarship|akademik çalışma|Scholarship depends on careful reading and honest citation.|academic study|original scholarship; academic scholarship; scholarly work
+participation|katılım|Participation in seminars can strengthen confidence and fluency.|involvement|class participation; active participation; participation rate
+specialisation|uzmanlaşma|Specialisation allows researchers to examine complex problems deeply.|focused expertise|academic specialisation; professional specialisation; narrow specialisation
+credential|yeterlilik belgesi|A credential may open doors, but it does not guarantee competence.|qualification|academic credential; professional credential; recognised credential
+aptitude|yetenek|Aptitude for languages can develop through sustained practice.|natural ability|academic aptitude; verbal aptitude; aptitude test
+feedback|geri bildirim|Feedback is most useful when it is specific and timely.|response|teacher feedback; constructive feedback; receive feedback
+discipline|akademik alan|Each discipline has its own methods and standards of evidence.|field of study|academic discipline; disciplinary knowledge; scientific discipline
+proficiency|yeterlilik|Proficiency in English helps students follow complex lectures.|skill level|language proficiency; academic proficiency; improve proficiency
+`),
+      technology: rows(`
+automation|otomasyon|Automation can remove repetitive tasks from the workplace.|machine operation|workplace automation; automation risk; increase automation
+privacy|gizlilik|Privacy is difficult to protect when apps collect constant data.|personal secrecy|data privacy; privacy regulation; protect privacy
+surveillance|gözetim|Surveillance can improve security but may reduce personal freedom.|monitoring|digital surveillance; mass surveillance; surveillance system
+algorithm|algoritma|An algorithm can recommend content without explaining its reasoning.|computational rule|search algorithm; biased algorithm; algorithm design
+consent|rıza|Consent should be clear before personal data is collected.|permission|informed consent; user consent; obtain consent
+moderation|denetim|Moderation is necessary when harmful content spreads quickly online.|content control|content moderation; automated moderation; moderation policy
+infrastructure|altyapı|Infrastructure determines whether digital services are reliable.|basic system|cloud infrastructure; digital infrastructure; infrastructure investment
+innovation|yenilik|Innovation can improve productivity but also disrupt old routines.|new development|technological innovation; innovation ecosystem; drive innovation
+encryption|şifreleme|Encryption protects messages from being read by outsiders.|secure coding|end-to-end encryption; data encryption; encryption standard
+authentication|kimlik doğrulama|Authentication prevents strangers from entering a private account.|identity verification|two-factor authentication; biometric authentication; authentication system
+connectivity|bağlantı|Connectivity remains weak in many rural communities.|network access|internet connectivity; mobile connectivity; improve connectivity
+interface|arayüz|A clear interface makes complex software easier to use.|user-facing design|user interface; interface design; intuitive interface
+platform|platform|A platform can connect workers, customers and advertisers.|digital service base|online platform; platform economy; platform regulation
+biometrics|biyometri|Biometrics can identify people through fingerprints or facial features.|body-based identification|biometric data; biometrics system; use biometrics
+prediction|tahmin|Prediction becomes powerful when companies collect years of behaviour.|forecasting|behavioural prediction; prediction model; accurate prediction
+transparency|şeffaflık|Transparency helps users understand how automated decisions are made.|openness|algorithmic transparency; transparency rules; demand transparency
+misinformation|yanlış bilgi|Misinformation can damage trust during a public crisis.|false information|spread misinformation; counter misinformation; misinformation campaign
+accessibility|erişilebilirlik|Accessibility ensures that disabled users can benefit from technology.|inclusive access|digital accessibility; accessibility standards; improve accessibility
+disruption|dönüşüm|Disruption can create new markets while weakening old industries.|major disturbance|technological disruption; market disruption; disruptive change
+oversight|denetim|Oversight is needed when artificial intelligence affects public rights.|supervision|human oversight; regulatory oversight; oversight mechanism
+`),
+      environment: rows(`
+biodiversity|biyoçeşitlilik|Biodiversity protects ecosystems from sudden collapse.|species variety|biodiversity loss; protect biodiversity; biodiversity decline
+mitigation|azaltma|Mitigation aims to reduce emissions before damage becomes irreversible.|emission reduction|climate mitigation; mitigation strategy; mitigation policy
+adaptation|uyum|Adaptation helps communities live with unavoidable climate impacts.|adjustment|climate adaptation; adaptation measures; adaptation planning
+degradation|bozulma|Degradation of soil can reduce agricultural productivity.|environmental damage|environmental degradation; land degradation; prevent degradation
+scarcity|kıtlık|Scarcity of water may intensify regional conflict.|shortage|water scarcity; resource scarcity; scarcity problem
+stewardship|sorumlu koruma|Stewardship requires people to protect resources for future generations.|responsible care|environmental stewardship; stewardship ethic; promote stewardship
+emissions|emisyonlar|Emissions from transport remain a major urban challenge.|pollutants|carbon emissions; reduce emissions; emissions target
+conservation|koruma|Conservation succeeds when local communities share its benefits.|protection|wildlife conservation; conservation strategy; conservation area
+sustainability|sürdürülebilirlik|Sustainability requires economic decisions to respect ecological limits.|long-term viability|environmental sustainability; sustainability goals; promote sustainability
+depletion|tükenme|Depletion of groundwater can damage farming communities.|exhaustion|resource depletion; depletion rate; avoid depletion
+resilience|dayanıklılık|Resilience is essential for cities facing extreme weather.|capacity to recover|climate resilience; build resilience; ecological resilience
+ecosystem|ekosistem|An ecosystem can be damaged by a small change in temperature.|natural system|forest ecosystem; ecosystem services; fragile ecosystem
+consumption|tüketim|Consumption patterns must change if waste is to fall.|use of resources|sustainable consumption; mass consumption; consumption habits
+pollution|kirlilik|Pollution affects health as well as the natural environment.|contamination|air pollution; reduce pollution; pollution levels
+renewables|yenilenebilir kaynaklar|Renewables are becoming cheaper in many energy markets.|clean energy sources|invest in renewables; renewables sector; renewables capacity
+restoration|restorasyon|Restoration of wetlands can reduce flood risk.|repair of nature|ecological restoration; habitat restoration; restoration project
+habitat|habitat|Habitat loss threatens many species before they are even studied.|natural living area|natural habitat; habitat loss; habitat fragmentation
+footprint|ayak izi|A large footprint often reflects high levels of energy use.|environmental impact|carbon footprint; ecological footprint; reduce footprint
+transition|dönüşüm|The transition to cleaner energy requires political commitment.|shift|low-carbon transition; energy transition; transition cost
+contamination|kirlenme|Contamination of rivers can affect drinking water and agriculture.|pollution|chemical contamination; contamination risk; prevent contamination
+`),
+      health: rows(`
+prevention|önleme|Prevention is usually cheaper than treating advanced disease.|early protection|disease prevention; prevention strategy; prevention programme
+wellbeing|iyi oluş|Wellbeing depends on social connection as well as physical health.|overall health|mental wellbeing; emotional wellbeing; promote wellbeing
+inequality|eşitsizlik|Inequality in healthcare access can shorten life expectancy.|unfair difference|health inequality; social inequality; reduce inequality
+intervention|müdahale|Intervention is most effective before a condition becomes severe.|action taken|medical intervention; early intervention; intervention programme
+surveillance|gözetim|Surveillance helps authorities detect outbreaks before they spread widely.|systematic monitoring|health surveillance; disease surveillance; surveillance data
+ethics|etik|Ethics becomes difficult when hospitals must ration treatment.|moral principles|medical ethics; ethical dilemma; ethics committee
+literacy|okuryazarlık|Literacy affects whether patients understand medical instructions.|understanding ability|health literacy; literacy barrier; improve literacy
+vaccination|aşılama|Vaccination protects individuals and reduces community transmission.|immunisation|vaccination uptake; vaccination campaign; vaccination rate
+nutrition|beslenme|Nutrition influences concentration, immunity and long-term health.|diet quality|good nutrition; nutrition policy; nutrition deficiency
+sedentary|hareketsiz|A sedentary routine can increase the risk of chronic illness.|inactive|sedentary lifestyle; sedentary behaviour; sedentary work
+chronic|kronik|Chronic illness places continuous pressure on families and clinics.|long-term|chronic disease; chronic condition; chronic pain
+autonomy|özerklik|Autonomy allows patients to participate in treatment decisions.|self-determination|patient autonomy; respect autonomy; autonomy rights
+epidemiology|epidemiyoloji|Epidemiology explains how diseases move through populations.|disease-pattern study|epidemiology data; epidemiology study; social epidemiology
+immunity|bağışıklık|Immunity can be weakened by poor nutrition and stress.|disease resistance|herd immunity; immune response; strengthen immunity
+burnout|tükenmişlik|Burnout is common when occupational stress continues for years.|work-related exhaustion|professional burnout; burnout risk; prevent burnout
+diagnosis|teşhis|Diagnosis is faster when doctors have reliable patient histories.|identification of illness|early diagnosis; accurate diagnosis; diagnosis process
+therapy|terapi|Therapy can help patients manage anxiety and trauma.|treatment|psychological therapy; therapy session; receive therapy
+screening|tarama|Screening can identify disease before symptoms appear.|early testing|health screening; cancer screening; screening programme
+resilience|dayanıklılık|Resilience helps people recover after illness or stress.|ability to recover|psychological resilience; resilience training; build resilience
+determinants|belirleyiciler|Determinants such as income and housing shape public health.|influencing factors|social determinants; health determinants; key determinants
+`),
+      economy: rows(`
+productivity|üretkenlik|Productivity can rise when workers receive better training.|output efficiency|economic productivity; productivity growth; improve productivity
+outsourcing|dış kaynak kullanımı|Outsourcing may reduce costs but weaken local employment.|external contracting|outsourcing strategy; outsource services; outsourcing jobs
+mobility|hareketlilik|Mobility allows workers to move where opportunities exist.|movement|workforce mobility; social mobility; labour mobility
+disparity|eşitsizlik|Disparity in income can undermine social cohesion.|gap|income disparity; regional disparity; reduce disparity
+resilience|dayanıklılık|Resilience helps an economy recover after external shocks.|capacity to recover|economic resilience; build resilience; resilient economy
+integration|bütünleşme|Integration makes national economies more dependent on one another.|connection|economic integration; market integration; regional integration
+employment|istihdam|Employment gives people income, identity and social stability.|work|stable employment; employment rate; precarious employment
+entrepreneurship|girişimcilik|Entrepreneurship can create jobs in regions with few large employers.|business creation|entrepreneurship culture; promote entrepreneurship; entrepreneurship support
+inflation|enflasyon|Inflation reduces purchasing power when wages do not keep pace.|price rise|high inflation; inflation rate; control inflation
+recession|resesyon|A recession often reduces investment and consumer confidence.|economic downturn|enter recession; recession risk; deep recession
+competitiveness|rekabet gücü|Competitiveness depends on innovation, skills and infrastructure.|ability to compete|global competitiveness; improve competitiveness; competitiveness index
+livelihood|geçim kaynağı|A livelihood can disappear when an industry declines suddenly.|means of living|secure livelihood; rural livelihood; threaten livelihood
+subsidy|sübvansiyon|A subsidy can protect jobs but distort market prices.|financial support|government subsidy; energy subsidy; subsidy scheme
+taxation|vergilendirme|Taxation funds public services and influences behaviour.|tax system|progressive taxation; taxation policy; taxation revenue
+investment|yatırım|Investment in skills can improve long-term productivity.|spending for future return|public investment; foreign investment; investment strategy
+stagnation|durgunluk|Stagnation in wages makes housing less affordable.|lack of growth|wage stagnation; economic stagnation; prolonged stagnation
+insecurity|güvencesizlik|Insecurity at work can damage mental health and planning.|lack of stability|income insecurity; job insecurity; economic insecurity
+specialisation|uzmanlaşma|Specialisation can make firms more efficient but less flexible.|focused expertise|industrial specialisation; regional specialisation; specialisation strategy
+liberalisation|serbestleşme|Liberalisation can expose local firms to stronger competition.|removal of restrictions|trade liberalisation; market liberalisation; liberalisation policy
+displacement|yerinden edilme|Displacement caused by automation requires serious retraining.|forced replacement|job displacement; worker displacement; displacement risk
+`),
+      urban: rows(`
+density|yoğunluk|Density can support public transport when planning is coherent.|concentration|urban density; high density; population density
+sprawl|yayılma|Sprawl increases travel distances and consumes farmland.|uncontrolled expansion|urban sprawl; suburban sprawl; limit sprawl
+congestion|yoğun trafik|Congestion wastes time and worsens air quality.|overcrowding|traffic congestion; commuter congestion; reduce congestion
+walkability|yürünebilirlik|Walkability improves when streets are safe and connected.|ease of walking|urban walkability; improve walkability; walkable neighbourhood
+segregation|ayrışma|Segregation can reinforce inequality between neighbourhoods.|separation|residential segregation; social segregation; reduce segregation
+affordability|karşılanabilirlik|Affordability has become a major housing issue for young adults.|financial accessibility|housing affordability; improve affordability; affordability crisis
+infrastructure|altyapı|Infrastructure often fails when population growth is too rapid.|basic facilities|urban infrastructure; infrastructure deficit; infrastructure investment
+amenities|olanaklar|Amenities such as parks and libraries improve daily life.|public facilities|civic amenities; local amenities; urban amenities
+regeneration|yenileme|Regeneration can improve an area but may also displace residents.|renewal|urban regeneration; regeneration project; regeneration scheme
+mobility|hareketlilik|Mobility in a city depends on transport, cost and accessibility.|ability to move|urban mobility; sustainable mobility; mobility network
+municipality|belediye|A municipality must provide services even when budgets are limited.|local government|municipality services; municipality budget; municipality planning
+commuter|işe gidip gelen kişi|A commuter may spend several hours travelling each day.|daily traveller|commuter congestion; commuter route; commuter train
+zoning|imar düzenlemesi|Zoning influences where homes, shops and factories can be built.|land-use regulation|zoning law; zoning policy; mixed zoning
+transit|toplu taşıma|Transit is more attractive when it is frequent and affordable.|public transport|mass transit; transit hub; transit-oriented development
+suburb|banliyö|A suburb can offer space but increase car dependency.|outer residential area|suburban growth; suburb expansion; leafy suburb
+tenancy|kiracılık|Tenancy rights protect renters from sudden eviction.|rental occupation|secure tenancy; tenancy agreement; tenancy law
+renovation|tadilat|Renovation can improve old housing without destroying communities.|building improvement|housing renovation; renovation project; renovation cost
+accessibility|erişilebilirlik|Accessibility matters for elderly residents and disabled travellers.|ease of access|transport accessibility; accessibility standards; improve accessibility
+liveability|yaşanabilirlik|Liveability depends on housing, safety, transport and green space.|quality of urban life|urban liveability; improve liveability; liveability index
+displacement|yerinden edilme|Displacement can occur when rents rise after redevelopment.|forced relocation|resident displacement; displacement pressure; prevent displacement
+`),
+      culture: rows(`
+heritage|miras|Heritage connects present communities with their historical identity.|inherited culture|cultural heritage; heritage site; preserve heritage
+discourse|söylem|Discourse becomes poorer when public debate rewards anger.|public discussion|public discourse; political discourse; shape discourse
+misinformation|yanlış bilgi|Misinformation spreads quickly during uncertain events.|false information|spread misinformation; counter misinformation; misinformation online
+cohesion|uyum|Cohesion depends on trust and shared public spaces.|unity|social cohesion; community cohesion; strengthen cohesion
+representation|temsil|Representation affects who feels visible in national media.|portrayal|cultural representation; fair representation; improve representation
+fragmentation|parçalanma|Fragmentation of audiences makes common debate more difficult.|division|audience fragmentation; social fragmentation; fragmentation process
+identity|kimlik|Identity is shaped by language, memory and shared experience.|sense of self|cultural identity; national identity; identity formation
+expression|ifade|Expression should be protected, but it can still cause harm.|communication of ideas|freedom of expression; artistic expression; expression rights
+journalism|gazetecilik|Journalism is under pressure from advertising loss and online speed.|news reporting|digital journalism; investigative journalism; journalism ethics
+broadcasting|yayıncılık|Broadcasting can provide education as well as entertainment.|media transmission|public broadcasting; broadcasting standards; broadcasting service
+tradition|gelenek|Tradition can give stability, but it should not prevent reform.|custom|cultural tradition; local tradition; preserve tradition
+pluralism|çoğulculuk|Pluralism allows different groups to coexist with dignity.|diversity of views|cultural pluralism; political pluralism; pluralism principle
+censorship|sansür|Censorship may silence harmful speech but also suppress criticism.|control of expression|state censorship; media censorship; censorship law
+narrative|anlatı|Narrative shapes how people interpret historical events.|story frame|dominant narrative; media narrative; narrative framing
+memory|hafıza|Memory of past conflict can influence present politics.|collective remembrance|collective memory; cultural memory; preserve memory
+stereotype|kalıp yargı|A stereotype reduces complex people to a simple image.|fixed assumption|negative stereotype; cultural stereotype; challenge stereotype
+audience|izleyici|An audience may trust a familiar news source more than official data.|viewers or listeners|target audience; fragmented audience; audience trust
+participation|katılım|Participation in cultural life can strengthen belonging.|involvement|civic participation; cultural participation; active participation
+exchange|değişim|Exchange between cultures can reduce prejudice when it is mutual.|sharing|cultural exchange; exchange programme; intellectual exchange
+authenticity|özgünlük|Authenticity is difficult to maintain when culture is marketed to tourists.|genuineness|cultural authenticity; authentic voice; question authenticity
+`),
+      science: rows(`
+innovation|yenilik|Innovation depends on funding, expertise and public acceptance.|new development|technological innovation; innovation ecosystem; drive innovation
+feasibility|uygulanabilirlik|Feasibility must be tested before a technology is adopted widely.|practical possibility|technological feasibility; feasibility study; assess feasibility
+uncertainty|belirsizlik|Uncertainty is normal when scientists study complex systems.|lack of certainty|scientific uncertainty; uncertainty range; acknowledge uncertainty
+threshold|eşik|A threshold of evidence is needed before policy changes are justified.|minimum level|evidence threshold; threshold level; meet threshold
+modelling|modelleme|Modelling helps researchers examine scenarios that cannot be tested directly.|simulation|scientific modelling; climate modelling; modelling assumptions
+efficiency|verimlilik|Efficiency can reduce energy demand without reducing comfort.|effective resource use|energy efficiency; improve efficiency; efficient system
+breakthrough|atılım|A breakthrough may transform medicine or energy production.|major advance|scientific breakthrough; breakthrough discovery; achieve breakthrough
+storage|depolama|Storage is essential when renewable energy supply fluctuates.|keeping for later use|energy storage; data storage; storage capacity
+transition|dönüşüm|Transition to cleaner energy requires infrastructure and public support.|shift|energy transition; low-carbon transition; transition strategy
+research|araştırma|Research can challenge assumptions that seem obvious in daily life.|systematic study|applied research; research funding; research findings
+development|geliştirme|Development turns a scientific idea into a practical product.|improvement process|research and development; product development; development stage
+experiment|deney|An experiment must be designed carefully to produce reliable results.|scientific test|controlled experiment; experiment design; conduct experiment
+validity|geçerlilik|Validity shows whether a test measures what it claims to measure.|soundness|scientific validity; validity of results; test validity
+replication|tekrarlama|Replication helps confirm that a finding is not accidental.|repeat testing|replication study; replication crisis; successful replication
+prototype|prototip|A prototype allows engineers to test a design before mass production.|trial model|early prototype; prototype testing; build a prototype
+application|uygulama|Application of research can take years after discovery.|practical use|practical application; clinical application; application of science
+precision|hassasiyet|Precision matters when small errors could change the result.|exactness|scientific precision; measurement precision; high precision
+reliability|güvenilirlik|Reliability improves when methods are transparent and repeatable.|dependability|data reliability; reliability of results; reliable method
+capacity|kapasite|Capacity for renewable generation has increased rapidly in some countries.|ability or volume|energy capacity; storage capacity; research capacity
+simulation|simülasyon|Simulation allows scientists to explore dangerous or expensive scenarios safely.|computer model|computer simulation; simulation model; run a simulation
+`)
+    };
+
+    const speaking = {
+      education: ["Do you prefer learning independently or with a teacher?", "How important is university education in your country?", "Do exams accurately measure students' abilities?", "What kind of subject do you think schools should teach more?", "How has technology changed the way people study?"],
+      technology: ["How often do you use digital services in daily life?", "Do you think people trust technology too much?", "What technology has changed your routine most?", "Should children learn coding at school?", "How do you protect your privacy online?"],
+      environment: ["Are people in your area concerned about environmental problems?", "What can individuals do to reduce waste?", "Do you prefer public transport or private cars?", "How important are parks in cities?", "Should governments make environmental rules stricter?"],
+      health: ["What do people in your country do to stay healthy?", "Do you think stress is a serious problem today?", "How important is public health education?", "Should employers help workers maintain work-life balance?", "What habits can prevent illness?"],
+      economy: ["What kind of job would you like in the future?", "Do young people in your country find it easy to get work?", "How important is professional development?", "Would you prefer job security or a higher salary?", "How has globalisation affected work?"],
+      urban: ["Do you like living in a busy city?", "How could transport be improved where you live?", "Is housing affordable for young people?", "What makes a neighbourhood pleasant?", "Should cities prioritise cars or pedestrians?"],
+      culture: ["How do people in your country get news?", "Is traditional culture still important to young people?", "Do you think social media improves communication?", "How can museums attract younger visitors?", "Should public broadcasting receive government support?"],
+      science: ["Are you interested in scientific discoveries?", "How important is renewable energy?", "Do people understand scientific information well?", "What invention has improved daily life most?", "Should governments spend more on research?"]
+    };
+
+    const readingPassages = [
+      {
+        title: "Universities and the Problem of Useful Knowledge",
+        topics: "Education & Research; Work, Economy & Globalisation",
+        passage: [
+          "Universities have always lived with a tension between intellectual inquiry and social utility. In one period they are praised as guardians of disciplinary knowledge; in another they are asked to behave as engines of economic productivity. The current pressure is especially intense because graduate employment is treated as a visible measure of institutional value. Yet the relationship between tertiary education and work is less direct than policy slogans imply.",
+          "Employers often complain of a skills mismatch, but the phrase can hide several different problems. Some graduates lack technical competence; others have expertise that is not recognised by local labour markets. In many sectors, rapid automation makes the shelf life of narrow training shorter than a degree programme itself. A curriculum designed only around immediate vacancies may therefore prepare students for jobs that are already changing.",
+          "This does not mean that universities should ignore employability. It means that professional development should be embedded in academic rigour rather than replacing it. Research literacy, critical inquiry and clear communication are not ornamental skills. They allow graduates to evaluate evidence, adapt to unfamiliar systems and resist simplistic claims. In a volatile economy, learning autonomy may be more durable than training in a single platform or procedure.",
+          "The most convincing curriculum reform is therefore neither purely vocational nor proudly detached from public needs. It connects empirical evidence with practical judgment. Students should encounter peer-reviewed research, but they should also learn how knowledge travels into workplaces, hospitals, schools and public agencies. If universities can hold these aims together, they may produce graduates who are employable precisely because they are not narrowly trained."
+        ],
+        groups: [
+          { type: "True / False / Not Given", items: [
+            ["Universities are currently judged partly by graduate employment outcomes.", "True"],
+            ["The passage argues that vocational training should replace academic rigour.", "False"],
+            ["Most employers now prefer graduates from online-only universities.", "Not Given"],
+            ["Narrow technical training can become outdated quickly.", "True"]
+          ]},
+          { type: "Sentence Completion", items: [
+            ["The phrase skills mismatch may conceal several different kinds of <span class='answer'>labour-market problem</span>.", ""],
+            ["The passage suggests that learning autonomy is more durable than training in a single <span class='answer'>platform or procedure</span>.", ""],
+            ["Effective curriculum reform should connect empirical evidence with <span class='answer'>practical judgment</span>.", ""]
+          ]}
+        ]
+      },
+      {
+        title: "Digital Convenience and the Price of Prediction",
+        topics: "Technology & Digital Society; Culture, Media & Communication",
+        passage: [
+          "The digital services that appear most convenient are often built on prediction. A map anticipates where a user wants to go; a shopping platform estimates what a household may buy next; a news feed ranks stories according to probable engagement. These systems are not passive tools. They structure attention, choices and sometimes opportunities. For that reason, debates about data privacy are no longer limited to whether information is stolen or exposed.",
+          "Predictive analytics depends on patterns, and patterns depend on data collected across time. In principle, this can produce benefits. Hospitals can identify patients at risk, transport networks can forecast congestion, and public agencies can allocate resources more precisely. However, when consent is vague and human oversight is weak, automated decisions may become difficult to challenge. Algorithmic bias can then reproduce existing inequalities while appearing neutral.",
+          "A second difficulty is cultural. Digital journalism, public discourse and even private conversation now occur inside platforms whose business models reward attention. Content moderation can remove some harmful material, but it cannot fully address the incentives that make misinformation profitable. Audience fragmentation also means that citizens may encounter different versions of reality while believing they are simply seeing the news.",
+          "The challenge is not to reject technological innovation. Societies need cloud infrastructure, cybersecurity and digital literacy. The question is whether technological adoption can be governed by rights, transparency and public accountability. Convenience is valuable, but when prediction becomes a form of invisible influence, citizens need more than efficient apps; they need institutions capable of explaining and limiting digital power."
+        ],
+        groups: [
+          { type: "Matching Information", items: [
+            ["Systems that predict behaviour can influence choices and opportunities.", "Paragraph 1"],
+            ["Automated decisions may seem neutral while reproducing inequality.", "Paragraph 2"],
+            ["Platform incentives can make misinformation profitable.", "Paragraph 3"],
+            ["Digital adoption should be guided by rights and accountability.", "Paragraph 4"]
+          ]},
+          { type: "Multiple Choice", items: [
+            ["What is the writer's main concern about data privacy? <span class='answer'>It involves prediction and influence, not only data exposure.</span>", ""],
+            ["According to the passage, why is content moderation insufficient? <span class='answer'>It does not remove the commercial incentives behind harmful content.</span>", ""],
+            ["What does the writer say societies need in addition to efficient apps? <span class='answer'>Institutions that can explain and limit digital power.</span>", ""]
+          ]}
+        ]
+      },
+      {
+        title: "Climate Adaptation in the Unequal City",
+        topics: "Environment & Climate; Urbanisation, Housing & Transport",
+        passage: [
+          "Climate change is often described through global averages, but its effects are experienced locally and unevenly. In dense cities, heatwaves are intensified by concrete surfaces, poor ventilation and a shortage of green space. Flooding is worsened where drainage systems have not kept pace with urban density. The result is not only environmental degradation but also spatial inequality, because vulnerable residents usually have the fewest resources to adapt.",
+          "Urban planning has traditionally separated environmental policy from housing and transport policy. That separation is increasingly unrealistic. A city that expands through urban sprawl locks residents into longer journeys and higher transport emissions. A city that pursues urban regeneration without affordable housing may improve public spaces while displacing the communities most in need of civic amenities. Climate resilience therefore depends on social choices as much as engineering.",
+          "Adaptation measures can be modest but powerful. Shaded streets, reflective roofs, restored wetlands and traffic calming can reduce risk while improving everyday life. Public transport networks can cut emissions and widen access to employment. Yet these interventions require maintenance, not merely announcement. Municipal services must be funded long after a project is photographed for political publicity.",
+          "The deeper issue is whether the low-carbon transition will be planned as a collective project or sold as a set of private consumer choices. Sustainable consumption matters, but individuals cannot create transit-oriented development or redesign water systems alone. Effective climate mitigation and adaptation require governments to treat ecosystem services, housing affordability and mobility as parts of one urban system."
+        ],
+        groups: [
+          { type: "Matching Headings", items: [
+            ["Paragraph 1", "Unequal local impacts of climate change"],
+            ["Paragraph 2", "Why city policy areas can no longer be separated"],
+            ["Paragraph 3", "Practical measures that need long-term support"],
+            ["Paragraph 4", "The limits of individual consumer action"]
+          ]},
+          { type: "Summary Completion", items: [
+            ["Climate risk in cities is shaped by heat, flooding and <span class='answer'>spatial inequality</span>.", ""],
+            ["Urban sprawl can increase journey length and <span class='answer'>transport emissions</span>.", ""],
+            ["The passage argues that climate policy should connect housing, mobility and <span class='answer'>ecosystem services</span>.", ""]
+          ]}
+        ]
+      },
+      {
+        title: "Public Health Beyond the Hospital",
+        topics: "Health & Public Policy; Education & Research",
+        passage: [
+          "Modern healthcare systems are often evaluated by hospitals: the number of beds, the speed of medical intervention and the availability of specialists. These measures matter, but they describe only the visible end of a much longer chain. Preventive healthcare begins before a patient reaches a clinic. It is shaped by housing, work-life balance, nutritional security, health literacy and trust in public institutions.",
+          "The idea of social determinants has become central to public health because disease is not distributed randomly. Chronic disease is more common where people experience occupational stress, poor diets and limited access to safe exercise. Mental wellbeing is also affected by loneliness, precarious employment and community decline. Treating these problems only after they become clinical conditions is expensive and ethically narrow.",
+          "Public health campaigns can help, but they must be designed with research literacy and cultural sensitivity. A message that sounds obvious to experts may be ignored by communities with different experiences of authority. Vaccination uptake, for example, is not only a matter of information; it is also a matter of confidence. Epidemiological data can identify where risk is concentrated, but local relationships often determine whether advice is followed.",
+          "A stronger system would combine evidence-based medicine with community care. Hospitals would remain essential, especially for complex cases, but they would not carry the entire burden of national health. Schools, employers, urban planners and local organisations would share responsibility for reducing risk. In this model, health policy becomes less about repairing bodies after damage and more about creating conditions in which fewer people are damaged."
+        ],
+        groups: [
+          { type: "True / False / Not Given", items: [
+            ["The passage says hospital indicators are important but incomplete.", "True"],
+            ["The writer claims vaccination uptake depends only on scientific information.", "False"],
+            ["The passage states that all countries spend the same amount on hospitals.", "Not Given"],
+            ["Community relationships can influence whether health advice is accepted.", "True"]
+          ]},
+          { type: "Sentence Completion", items: [
+            ["Preventive healthcare is influenced by housing, employment, nutrition and <span class='answer'>health literacy</span>.", ""],
+            ["The writer describes treating social problems only as clinical conditions as expensive and <span class='answer'>ethically narrow</span>.", ""],
+            ["A stronger system would connect evidence-based medicine with <span class='answer'>community care</span>.", ""]
+          ]}
+        ]
+      },
+      {
+        title: "Energy Innovation and the Politics of Evidence",
+        topics: "Science, Energy & Innovation; Environment & Climate",
+        passage: [
+          "The energy transition is frequently presented as a technological race, but it is equally a test of institutions. Scientific breakthroughs in storage, low-emission technology and energy efficiency can expand what is technically possible. However, technological feasibility is only one part of public change. Infrastructure must be financed, risks must be assessed, and citizens must believe that costs and benefits are being distributed fairly.",
+          "Research and development has already lowered the cost of renewable energy, yet intermittency remains a serious planning problem. Solar and wind output fluctuate, so energy storage and grid management are essential. Scientific modelling can estimate future demand, but models depend on assumptions about behaviour, policy and climate. Honest communication of scientific uncertainty is therefore more useful than exaggerated certainty.",
+          "The politics of evidence becomes difficult when decisions are urgent. Waiting for a perfect evidence threshold may delay climate mitigation, while acting on weak evidence may waste resources or reduce public trust. Policymakers must often choose under uncertainty, using the best available data while remaining willing to revise decisions. This is not a failure of science; it is a normal feature of governing complex systems.",
+          "Energy security adds another layer. Countries want reliable supply, affordable prices and lower emissions, but these goals can conflict in the short term. A successful innovation ecosystem will link applied research with manufacturing, regulation and public communication. The future of energy will not be decided by laboratories alone, but without scientific literacy, societies may struggle to understand the trade-offs they face."
+        ],
+        groups: [
+          { type: "Matching Information", items: [
+            ["Technological possibility is not enough for public change.", "Paragraph 1"],
+            ["Models rely on assumptions about behaviour and policy.", "Paragraph 2"],
+            ["Policy often requires action before evidence is perfect.", "Paragraph 3"],
+            ["Energy goals may conflict in the short term.", "Paragraph 4"]
+          ]},
+          { type: "Summary Completion", items: [
+            ["The energy transition tests both technology and <span class='answer'>institutions</span>.", ""],
+            ["Renewable systems require storage because output can <span class='answer'>fluctuate</span>.", ""],
+            ["A successful innovation ecosystem connects research, manufacturing, regulation and <span class='answer'>public communication</span>.", ""]
+          ]}
+        ]
+      }
+    ];
+
+    localStorage.removeItem("ieltsAcademic7Progress");
+    const stateKey = "ieltsAcademic7DeployProgressV1";
+    const state = JSON.parse(localStorage.getItem(stateKey) || '{"reviews":{},"studied":{}}');
+    const sections = ["vocabulary", "speaking", "exercises", "review", "reading", "progress"];
+    const labels = { vocabulary: "Vocabulary", speaking: "Speaking", exercises: "Exercises", review: "Review", reading: "Reading", progress: "Progress" };
+    const allWords = topics.flatMap(([id, name]) => V[id].map((item, index) => ({ id: id + "-" + index, topic: id, topicName: name, w: item[0], tr: item[1], ex: item[2], p: item[3], c: item[4] })));
+    let activeSpeakingTopic = topics[0][0];
+    let timerInterval = null;
+    let secondsLeft = 45;
+
+    function save() {
+      localStorage.setItem(stateKey, JSON.stringify(state));
+      renderStats();
+    }
+
+    function dueItems() {
+      const now = Date.now();
+      return allWords.filter(word => state.reviews[word.id] && state.reviews[word.id].due <= now);
+    }
+
+    function topicName(id) {
+      return topics.find(t => t[0] === id)[1];
+    }
+
+    function setSection(id) {
+      sections.forEach(section => document.getElementById(section).classList.toggle("active", section === id));
+      document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button.dataset.tab === id));
+      if (id === "progress") renderProgress();
+      if (id === "review") renderReview();
+    }
+
+    function optionList(select, includeAll) {
+      select.innerHTML = (includeAll ? "<option value='all'>All topics</option>" : "") + topics.map(([id, name]) => `<option value="${id}">${name}</option>`).join("");
+    }
+
+    function renderTabs() {
+      document.getElementById("tabs").innerHTML = sections.map(id => `<button data-tab="${id}" class="${id === "vocabulary" ? "active" : ""}">${labels[id]}</button>`).join("");
+      document.querySelectorAll("[data-tab]").forEach(button => button.addEventListener("click", () => setSection(button.dataset.tab)));
+    }
+
+    function renderStats() {
+      document.getElementById("statWords").textContent = allWords.length;
+      document.getElementById("statTopics").textContent = topics.length;
+      document.getElementById("statDue").textContent = dueItems().length;
+      document.getElementById("statMastered").textContent = Object.values(state.reviews).filter(r => r.box >= 5).length;
+    }
+
+    function addReview(id) {
+      if (!state.reviews[id]) state.reviews[id] = { box: 1, due: Date.now(), seen: 0 };
+      state.studied[id] = true;
+      save();
+      renderVocabulary();
+      renderReview();
+    }
+
+    function renderVocabulary() {
+      const topic = document.getElementById("vocabTopic").value || "all";
+      const search = document.getElementById("vocabSearch").value.trim().toLowerCase();
+      const words = allWords.filter(word => {
+        const topicMatch = topic === "all" || word.topic === topic;
+        const haystack = [word.w, word.tr, word.ex, word.p, word.c, word.topicName].join(" ").toLowerCase();
+        return topicMatch && (!search || haystack.includes(search));
+      });
+      document.getElementById("vocabGrid").innerHTML = words.map(word => `
+        <article class="card word-card">
+          <span class="tag">${word.topicName}</span>
+          <div class="word-title">${word.w}</div>
+          <p><strong>Turkish:</strong> ${word.tr}</p>
+          <p><strong>Example:</strong> ${word.ex}</p>
+          ${word.p ? `<p><strong>Paraphrase:</strong> ${word.p}</p>` : ""}
+          <div class="collocations">${word.c.split(";").map(c => `<span class="chip">${c.trim()}</span>`).join("")}</div>
+          <button class="${state.reviews[word.id] ? "secondary" : "primary"}" data-add="${word.id}">${state.reviews[word.id] ? "In Review" : "Add to Review"}</button>
+        </article>
+      `).join("") || `<div class="empty">No words match this search.</div>`;
+      document.querySelectorAll("[data-add]").forEach(button => button.addEventListener("click", () => addReview(button.dataset.add)));
+    }
+
+    function renderSpeakingTopics() {
+      document.getElementById("speakingTopics").innerHTML = topics.map(([id, name]) => `
+        <button class="topic-button ${id === activeSpeakingTopic ? "active" : ""}" data-speaking-topic="${id}">
+          <strong>${name}</strong><span>${V[id].length} target items</span>
+        </button>
+      `).join("");
+      document.querySelectorAll("[data-speaking-topic]").forEach(button => button.addEventListener("click", () => {
+        activeSpeakingTopic = button.dataset.speakingTopic;
+        renderSpeakingTopics();
+        renderSpeaking();
+      }));
+    }
+
+    function renderSpeaking() {
+      const topicWords = V[activeSpeakingTopic].slice(0, 8).map(v => v[0]);
+      document.getElementById("speakingTitle").textContent = topicName(activeSpeakingTopic);
+      document.getElementById("partOneQuestions").innerHTML = speaking[activeSpeakingTopic].map(q => `<div class="prompt">${q}</div>`).join("");
+      document.getElementById("speakingPrompt").innerHTML = `Give a 45-second answer about <strong>${topicName(activeSpeakingTopic)}</strong>. Include a reason, one concrete example, and a brief comparison.`;
+      document.getElementById("targetWords").innerHTML = `<strong>Target words:</strong> ${topicWords.join(", ")}. Use collocations naturally when they help your answer.`;
+    }
+
+    function setTimerDisplay() {
+      const mins = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
+      const secs = String(secondsLeft % 60).padStart(2, "0");
+      document.getElementById("timer").textContent = `${mins}:${secs}`;
+    }
+
+    function sample(arr, n) {
+      return [...arr].sort(() => Math.random() - .5).slice(0, n);
+    }
+
+    function blankSentence(sentence, word) {
+      const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const phrase = new RegExp(escaped, "i");
+      if (phrase.test(sentence)) return sentence.replace(phrase, "________");
+      return sentence + " ________";
+    }
+
+    function exerciseShell(title, html, intro = "") {
+      const id = "ex-" + Math.random().toString(36).slice(2);
+      return `<article class="card exercise-card" id="${id}">
+        <h3>${title}</h3>
+        ${intro ? `<p class="small">${intro}</p>` : ""}
+        <div class="exercise-body">${html}</div>
+        <button class="primary" data-finish="${id}">Finish Exercise</button>
+      </article>`;
+    }
+
+    function wordsForExercise(topic) {
+      return topic === "all" ? allWords : allWords.filter(w => w.topic === topic);
+    }
+
+    function optionSet(correct, pool, count = 4) {
+      const sameTopic = pool.filter(w => w.id !== correct.id && w.topic === correct.topic);
+      const fallback = allWords.filter(w => w.id !== correct.id);
+      const source = sameTopic.length >= count - 1 ? sameTopic : fallback;
+      const distractors = sample(source, count - 1).map(w => w.w);
+      return sample([correct.w, ...distractors], count);
+    }
+
+    function gapSentence(word) {
+      const escaped = word.w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const phrase = new RegExp(escaped, "i");
+      if (!phrase.test(word.ex)) {
+        return `Researchers increasingly consider <span class="answer">${word.w}</span> when evaluating complex academic problems.`;
+      }
+      const gapped = word.ex.replace(phrase, `<span class="answer">${word.w}</span>`);
+      if (/^\s*<span class="answer">/.test(gapped)) {
+        const starters = {
+          education: "In academic contexts",
+          technology: "In digital society",
+          environment: "In environmental policy",
+          health: "In public health",
+          economy: "In labour-market debates",
+          urban: "In urban planning",
+          culture: "In media analysis",
+          science: "In scientific research"
+        };
+        return `${starters[word.topic] || "In IELTS Academic discussion"}, ${gapped.charAt(0).toLowerCase()}${gapped.slice(1)}`;
+      }
+      return gapped;
+    }
+
+    function renderQuestion(word, pool, index) {
+      const options = optionSet(word, pool);
+      return `<div class="exercise-row" data-question="${word.id}">
+        <div class="question-text">${index + 1}. ${gapSentence(word)}</div>
+        <div class="choice-list">
+          ${options.map(option => `<label class="${option === word.w ? "correct-choice" : ""}"><input type="radio" name="mc-${word.id}"> ${option}</label>`).join("")}
+        </div>
+      </div>`;
+    }
+
+    function renderExercises() {
+      const topic = document.getElementById("exerciseTopic").value;
+      const pool = wordsForExercise(topic);
+      const groups = topic === "all"
+        ? topics.map(([id, name]) => ({ name, words: pool.filter(w => w.topic === id) }))
+        : [{ name: topicName(topic), words: pool }];
+      const questions = groups.map(group => `
+        ${topic === "all" ? `<h3 class="exercise-group-title">${group.name}</h3>` : ""}
+        ${group.words.map((word, index) => renderQuestion(word, pool, index)).join("")}
+      `).join("");
+      document.getElementById("exerciseDeck").innerHTML = exerciseShell(
+        "Multiple Choice Gap Fill",
+        questions,
+        "Choose the best target word for each IELTS-style sentence. Click Finish Exercise to reveal the correct word in the blank and highlight the correct option."
+      );
+      document.querySelectorAll("#exerciseDeck [data-finish]").forEach(button => button.addEventListener("click", () => {
+        document.getElementById(button.dataset.finish).classList.add("revealed");
+      }));
+    }
+
+    function updateReview(wordId, quality) {
+      const intervals = { again: 0, hard: 1, good: 3, easy: 7 };
+      const record = state.reviews[wordId] || { box: 1, due: Date.now(), seen: 0 };
+      record.seen += 1;
+      record.box = quality === "again" ? 1 : Math.min(5, record.box + (quality === "easy" ? 2 : 1));
+      record.due = Date.now() + intervals[quality] * record.box * 86400000;
+      state.reviews[wordId] = record;
+      state.studied[wordId] = true;
+      save();
+      renderReview();
+    }
+
+    function renderReview() {
+      const due = dueItems();
+      document.getElementById("reviewSummary").textContent = `${Object.keys(state.reviews).length} words in review, ${due.length} due now.`;
+      if (!due.length) {
+        document.getElementById("reviewCard").innerHTML = `<div class="empty">No words are due. Add words from Vocabulary or use Add Core Words.</div>`;
+        return;
+      }
+      const word = due[0];
+      document.getElementById("reviewCard").innerHTML = `
+        <span class="tag">${word.topicName}</span>
+        <div class="word-title">${word.w}</div>
+        <p><strong>Turkish:</strong> ${word.tr}</p>
+        <p>${word.ex}</p>
+        <div class="collocations">${word.c.split(";").map(c => `<span class="chip">${c.trim()}</span>`).join("")}</div>
+        <div class="review-actions">
+          <button data-quality="again">Again</button>
+          <button data-quality="hard">Hard</button>
+          <button data-quality="good" class="primary">Good</button>
+          <button data-quality="easy">Easy</button>
+        </div>`;
+      document.querySelectorAll("[data-quality]").forEach(button => button.addEventListener("click", () => updateReview(word.id, button.dataset.quality)));
+    }
+
+    function renderReading() {
+      document.getElementById("readingDeck").innerHTML = readingPassages.map((passage, index) => {
+        const groups = passage.groups.map((group, gi) => `
+          <div class="question-group">
+            <h4>${group.type}</h4>
+            <div class="exercise-body">
+              ${group.items.map((item, ii) => `<div class="exercise-row">${ii + 1}. ${item[0]} ${item[1] ? `<span class="answer">${item[1]}</span>` : ""}</div>`).join("")}
+            </div>
+          </div>`).join("");
+        return `<article class="card reading-card" id="reading-${index}">
+          <span class="tag">${passage.topics}</span>
+          <h3>${passage.title}</h3>
+          <div class="passage">${passage.passage.map(p => `<p>${p}</p>`).join("")}</div>
+          ${groups}
+          <button class="primary" data-finish="reading-${index}">Finish Exercise</button>
+        </article>`;
+      }).join("");
+      document.querySelectorAll("#reading [data-finish]").forEach(button => button.addEventListener("click", () => {
+        document.getElementById(button.dataset.finish).classList.add("revealed");
+      }));
+    }
+
+    function renderProgress() {
+      document.getElementById("progressDeck").innerHTML = topics.map(([id, name]) => {
+        const words = V[id].map((_, index) => id + "-" + index);
+        const studied = words.filter(wordId => state.studied[wordId]).length;
+        const reviewed = words.filter(wordId => state.reviews[wordId]).length;
+        const mastered = words.filter(wordId => state.reviews[wordId] && state.reviews[wordId].box >= 5).length;
+        const pct = Math.round((studied / words.length) * 100);
+        return `<article class="card">
+          <h3>${name}</h3>
+          <p class="small">${studied}/${words.length} studied · ${reviewed} in review · ${mastered} mastered</p>
+          <div class="progress-bar"><span style="width:${pct}%"></span></div>
+        </article>`;
+      }).join("");
+    }
+
+    function init() {
+      renderTabs();
+      optionList(document.getElementById("vocabTopic"), true);
+      optionList(document.getElementById("exerciseTopic"), true);
+      renderStats();
+      renderVocabulary();
+      renderSpeakingTopics();
+      renderSpeaking();
+      renderExercises();
+      renderReading();
+      renderReview();
+      renderProgress();
+      document.getElementById("vocabTopic").addEventListener("change", renderVocabulary);
+      document.getElementById("vocabSearch").addEventListener("input", renderVocabulary);
+      document.getElementById("exerciseTopic").addEventListener("change", renderExercises);
+      document.getElementById("newExercises").addEventListener("click", renderExercises);
+      document.getElementById("seedReview").addEventListener("click", () => {
+        topics.forEach(([id]) => V[id].slice(0, 8).forEach((_, index) => addReview(id + "-" + index)));
+      });
+      document.getElementById("clearProgress").addEventListener("click", () => {
+        if (confirm("Reset all local progress?")) {
+          state.reviews = {};
+          state.studied = {};
+          save();
+          renderVocabulary();
+          renderReview();
+          renderProgress();
+        }
+      });
+      document.getElementById("startTimer").addEventListener("click", () => {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          secondsLeft = Math.max(0, secondsLeft - 1);
+          setTimerDisplay();
+          if (secondsLeft === 0) clearInterval(timerInterval);
+        }, 1000);
+      });
+      document.getElementById("resetTimer").addEventListener("click", () => {
+        clearInterval(timerInterval);
+        secondsLeft = 45;
+        setTimerDisplay();
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

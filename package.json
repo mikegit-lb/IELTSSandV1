@@ -1,0 +1,19 @@
+{
+  "name": "ielts-academic-vocabulary-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A standalone IELTS Academic Band 7+ vocabulary, speaking, reading, and spaced-repetition study app.",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "ielts",
+    "academic",
+    "vocabulary",
+    "speaking",
+    "reading",
+    "static"
+  ],
+  "license": "UNLICENSED"
+}
